@@ -11,8 +11,11 @@ int main(){
 
     m->load("./test.lua");
 
-    std::cout << m->gameObjects.at(0)->getAttribute<std::string>("myStr") << std::endl;
-    std::cout << *m->gameObjects.at(0)->getAttribute<std::string>("myStr") << std::endl;
+    std::cout << m->gameObjects->at(0)->getAttribute<std::string>("myStr") << std::endl;
+    std::cout << *m->gameObjects->at(0)->getAttribute<std::string>("myStr") << std::endl;
+
+    m->gameObjects->at(0)->setupPointer();
+
 
     delete m;
 
