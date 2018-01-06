@@ -20,7 +20,7 @@ namespace Simple2D{
         int queryScript(lua_State *L, GameObject *gObj, Simple2D::ExternalCode::Handle handle);
     public:
         Map(std::string& path);
-        Map() = default;
+        Map();
         ~Map();
 
         int load(std::string path);

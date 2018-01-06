@@ -4,12 +4,21 @@
 
 #include "../header/Map.h"
 
+Simple2D::Map::Map(){
+    gameObjects = new std::vector<GameObject*>;
+}
 
 Simple2D::Map::Map(std::string& path) {
+    gameObjects = new std::vector<GameObject*>;
     load(path);
 }
 
 Simple2D::Map::~Map() {
+    for(auto* g : *gameObjects){
+        ExternalCode::close(g->handle);
+        delete g;
+    }
+    delete gameObjects;
     remove();
 }
 
@@ -41,14 +50,16 @@ int Simple2D::Map::load(std::string path) {
 }
 
 int Simple2D::Map::loadGameObject(std::string path) {
-
     ExternalCode::Handle h = ExternalCode::open(path + "/external.so");
     auto* gObj = new GameObject();
-    gObj->handle = h;
 
+    gObj->handle = h;
     gObj->setupPointer = (void(*)())(ExternalCode::find(h, "setup"));
     gObj->updatePointer = (void(*)())(ExternalCode::find(h, "update"));
-    gameObjects.push_back(gObj);
+    gameObjects->push_back(gObj);
+
+    auto loadFunc = (void(*)(std::vector<GameObject*>*))(ExternalCode::find(h, "load"));
+    loadFunc(this->gameObjects);
 
     std::string luaPath = path + "/cfg.lua";
     lua_State* L = luaL_newstate();
