@@ -69,6 +69,10 @@ int Simple2D::Map::loadGameObject(std::string path) {
         return -1;
     }
 
+    pushToTop("data.name", L);
+    gObj->name = (char *)lua_tostring(L, -1);
+    lua_pop(L, 1);
+
     pushToTop("data.size", L);
     int attributeAmount = (int)lua_tointeger(L, -1);
     lua_pop(L, 1);
