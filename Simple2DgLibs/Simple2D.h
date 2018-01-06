@@ -6,7 +6,7 @@
 #define SIMPLE2DENGINE_SIMPLE2D_H
 
 #include <vector>
-#include "GameObject.h"
+#include "../Simple2DEngine/header/GameObject.h"
 
 #ifdef WIN32
 #define export extern "C" __declspec(dllexport)
@@ -15,7 +15,8 @@
 #define export extern "C"
 #endif
 
-export std::vector<Simple2D::GameObject> gameObjects;
+std::vector<Simple2D::GameObject*>* gameObjects;
+Simple2D::GameObject* findGameObject(std::string name);
 
 
 #endif //SIMPLE2DENGINE_SIMPLE2D_H

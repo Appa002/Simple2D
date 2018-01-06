@@ -28,7 +28,7 @@ namespace Simple2D{
         void updateAll();
         void renderAll();
 
-        std::vector<GameObject*> gameObjects;
+        std::vector<GameObject*>* gameObjects;
     };
 }
 
