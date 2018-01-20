@@ -11,11 +11,11 @@
 #include <iostream>
 #include "ExternalCodeLoadingWrapper.h"
 #include "GameObject.h"
+#include "Utils.h"
 
 namespace Simple2D{
     class Map {
     private:
-        int pushToTop(std::string name, lua_State* L);
         int loadGameObject(std::string path);
         int queryScript(lua_State *L, GameObject *gObj, Simple2D::ExternalCode::Handle handle);
     public:
@@ -23,9 +23,11 @@ namespace Simple2D{
         Map();
         ~Map();
 
+        std::string name;
         int load(std::string path);
         void remove();
         void updateAll();
+        void setupAll();
         void renderAll();
 
         std::vector<GameObject*>* gameObjects;
