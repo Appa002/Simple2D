@@ -12,6 +12,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <iostream>
+#include "MapManager.h"
+
 
 namespace Simple2D{
     int startEngine(){
@@ -59,7 +61,10 @@ namespace Simple2D{
         glLinkProgram(shader_programme);
 
         SDL_Event event;
-        glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+
+        Simple2D::MapManager::get()->loadMap("./0.lua");
 
         bool bQuit = false;
         while (!bQuit) {
@@ -72,8 +77,9 @@ namespace Simple2D{
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glUseProgram(shader_programme);
-            // glBindVertexArray(vao);
-            // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+            Simple2D::MapManager::get()->getCurrentMap()->updateAll();
+            Simple2D::MapManager::get()->getCurrentMap()->renderAll();
 
             SDL_GL_SwapWindow(window);
 
