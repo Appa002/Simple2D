@@ -13,6 +13,7 @@
     #include <dlfcn.h>
 #endif
 
+#include <string>
 
 namespace Simple2D::ExternalCode{
 
