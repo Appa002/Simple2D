@@ -7,7 +7,14 @@
 #define SIMPLE2DENGINE_GAMEOBJECT_H
 
 #include "ExternalCodeLoadingWrapper.h"
+#include "Utils.h"
+#include <vector>
 #include <iostream>
+#include <GL/glew.h>
+#include <GL/glu.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
 
 namespace Simple2D{
     class Attribute{
@@ -29,8 +36,22 @@ namespace Simple2D{
     };
 
     class  GameObject {
+    private:
+        int* x;
+        int* y;
+        int* n;
+        int forceChannels = 4;
+        unsigned char* imageData;
+        GLuint* vao;
+
     public:
         GameObject(){
+
+            x = new int(0);
+            x = new int(0);
+            x = new int(0);
+            vao = new GLuint(0);
+
             Attribute attr;
             attr.content = new int(0);
             attr.hash = typeid(int).hash_code();
@@ -46,6 +67,7 @@ namespace Simple2D{
         }
 
         std::string name;
+        std::string path;
         ExternalCode::Handle handle;
 
         void(*updatePointer)();
@@ -57,6 +79,8 @@ namespace Simple2D{
         template<typename T> void removeAttribute(std::string name);
         template<typename T> Attribute findAttribute(std::string name);
         template<typename T> Attribute findAttribute(std::string name, bool* error, unsigned int* idx);
+        void render();
+        void preSetup();
 
     private:
         std::vector<Attribute> attributes;
@@ -144,7 +168,6 @@ inline void Simple2D::GameObject::addAttribute(std::string name, T* content)
     GameObject::attributes.push_back(attrib);
 
 }
-
 
 
 #endif //SIMPLE2DENGINE_GAMEOBJECT_H
