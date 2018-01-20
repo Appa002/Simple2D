@@ -8,22 +8,24 @@
 namespace Simple2D{
     template<class T> class Singleton{
     private:
-        T* instance = 0;
+        static T* instance;
     public:
-        T* get(){
+        static T* get(){
             if(!instance){
                 instance = new T;
             }
             return instance;
         }
 
-        void del(){
+        static void del(){
             if(instance){
                 delete instance;
             }
         }
 
     };
+
+    template <typename T> T* Simple2D::Singleton<T>::instance = 0;
 }
 
 #endif //SIMPLE2DENGINE_SINGLETON_H
