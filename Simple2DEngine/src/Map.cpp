@@ -14,12 +14,9 @@ Simple2D::Map::Map(std::string& path) {
 }
 
 Simple2D::Map::~Map() {
-    for(auto* g : *gameObjects){
-        ExternalCode::close(g->handle);
-        delete g;
+    if(gameObjects){
+        remove();
     }
-    delete gameObjects;
-    remove();
 }
 
 int Simple2D::Map::load(std::string path) {
@@ -31,13 +28,16 @@ int Simple2D::Map::load(std::string path) {
         return -1;
     }
 
+    Utils::pushToTop("data.name", L);
+    this->name = lua_tostring(L, -1);
+    lua_pop(L, 1);
 
-    pushToTop("data.size", L);
+    Utils::pushToTop("data.size", L);
     int amountOfGameObjects = (int)lua_tointeger(L, -1);
     lua_pop(L, 1);
 
     for(size_t i = 0; i < amountOfGameObjects; i++){
-        pushToTop("data.object_" + std::to_string(i), L);
+        Utils::pushToTop("data.object_" + std::to_string(i), L);
         std::string objectPath = lua_tostring(L, -1);
         lua_pop(L, 1);
 
@@ -53,6 +53,7 @@ int Simple2D::Map::loadGameObject(std::string path) {
     ExternalCode::Handle h = ExternalCode::open(path + "/external.so");
     auto* gObj = new GameObject();
 
+    gObj->path = path;
     gObj->handle = h;
     gObj->setupPointer = (void(*)())(ExternalCode::find(h, "setup"));
     gObj->updatePointer = (void(*)())(ExternalCode::find(h, "update"));
@@ -69,16 +70,17 @@ int Simple2D::Map::loadGameObject(std::string path) {
         return -1;
     }
 
-    pushToTop("data.name", L);
+    Utils::pushToTop("data.name", L);
     gObj->name = (char *)lua_tostring(L, -1);
     lua_pop(L, 1);
 
-    pushToTop("data.size", L);
+    Utils::pushToTop("data.size", L);
     int attributeAmount = (int)lua_tointeger(L, -1);
     lua_pop(L, 1);
 
+
     for(size_t i = 0; i < attributeAmount; i++){
-        pushToTop("data.attribute_" + std::to_string(i), L);
+        Utils::pushToTop("data.attribute_" + std::to_string(i), L);
 
         queryScript(L, gObj, h);
         lua_pop(L, 1);
@@ -88,11 +90,11 @@ int Simple2D::Map::loadGameObject(std::string path) {
 }
 
 int Simple2D::Map::queryScript(lua_State *L, GameObject *gObj, Simple2D::ExternalCode::Handle handle) {
-    pushToTop("name", L);
+    Utils::pushToTop("name", L);
     std::string name = (char*)lua_tostring(L, -1);
     lua_remove(L, -1);
 
-    pushToTop("valType", L);
+    Utils::pushToTop("valType", L);
     std::string type = (char*)lua_tostring(L, -1);
 
     lua_remove(L, -1);
@@ -119,43 +121,29 @@ int Simple2D::Map::queryScript(lua_State *L, GameObject *gObj, Simple2D::Externa
 }
 
 void Simple2D::Map::remove() {
-
+    for(auto* g : *gameObjects){
+        ExternalCode::close(g->handle);
+        delete g;
+    }
+    delete gameObjects;
+    gameObjects = nullptr;
 }
 
 void Simple2D::Map::updateAll() {
-
+    for(auto g : *this->gameObjects){
+        g->updatePointer();
+    }
 }
 
 void Simple2D::Map::renderAll() {
-
+    for(auto* gameObject : *this->gameObjects){
+        gameObject->render();
+    }
 }
 
-int Simple2D::Map::pushToTop(std::string name, lua_State *L) {
-    std::string subPropertyName;			//example: "foo.bar.x": here foo, bar and x are subPropertyNames as they are seperated by a .
-    for (unsigned int i = 0; i < name.size(); i++) {
-
-        if (name.at(i) != '.') {
-            subPropertyName += name.at(i);
-        }
-
-        if (name.at(i) == '.' || i + (unsigned int)(1) >= name.size())
-        {
-            lua_getglobal(L, subPropertyName.c_str());
-            if(lua_isnil(L, -1)){
-                lua_remove(L, -1);
-                lua_getfield(L, -1, subPropertyName.c_str());
-            }
-
-            if (lua_isnil(L, -1)) {
-                printf("%s in %s is nil \n", subPropertyName.c_str(), name.c_str());
-                lua_pop(L, 1);
-                return -1;
-            }
-
-            subPropertyName = "";
-        }
-
+void Simple2D::Map::setupAll() {
+    for(auto g : *this->gameObjects){
+        g->setupPointer();
     }
-    return 0;
 }
 
