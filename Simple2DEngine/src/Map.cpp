@@ -131,7 +131,15 @@ void Simple2D::Map::remove() {
 
 void Simple2D::Map::updateAll() {
     for(auto g : *this->gameObjects){
-        g->updatePointer();
+        try {
+            try {
+                g->updatePointer();
+            } catch (std::exception& e){
+                printf("[ERROR] GameObject \"%s\" threw error while executing \"update()()\", error: \n%s \n", name.c_str(), e.what());
+            }
+        } catch (...){
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
+        }
     }
 }
 
@@ -143,7 +151,17 @@ void Simple2D::Map::renderAll() {
 
 void Simple2D::Map::setupAll() {
     for(auto g : *this->gameObjects){
-        g->setupPointer();
+        try {
+            try {
+                g->setupPointer();
+            } catch (std::exception& e){
+                printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\", error: \n%s \n", name.c_str(), e.what());
+            }
+        } catch (...){
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
+        }
+
+
     }
 }
 
