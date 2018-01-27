@@ -1,15 +1,20 @@
 #include <string>
 #include "Simple2D.h"
+#include "../Simple2DEngine/header/types.h"
 #include <iostream>
 
 
-extern "C" std::string myStr = "Trololololololololololol";
+std::string* myStr;
+ADD_PROPERTY(std::string*, myStr);
 
-
-extern "C" void setup(){
-    //std::cout << *gameObjects->at(0)->getAttribute<std::string>("myStr") << std::endl;
-    std::cout << *findGameObject("testObj")->getAttribute<std::string>("myStr") << std::endl;
+export void init(){
+    myStr = new std::string("Hello, World");
 }
 
-extern "C" void update(){
+export void setup(){
+    printf(findGameObject("testObj")->getAttribute<std::string*>("myStr")->c_str());
+}
+
+export void update(){
+
 }
