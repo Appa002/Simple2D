@@ -12,14 +12,37 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <iostream>
+#include <fstream>
 #include "MapManager.h"
 
 
 namespace Simple2D{
     int startEngine(){
 
-        const char* vertex_shader = "#version 410\n in vec3 vp; void main(){ gl_Position = vec4(vp.x, vp.y, vp.z, 1.0f); }\n";
-        const char* fragment_shader = "#version 410\n out vec4 fragment_color; void main(){ fragment_color = vec4(0.0f, 0.5f, 0.5f, 1.0f); }\n";
+        std::string vertex_shader;
+        std::string fragment_shader;
+
+        std::ifstream vsFile;
+        std::ifstream fsFile;
+
+        vsFile.open("./vertex.shader", std::ios::in);
+        fsFile.open("./fragment.shader", std::ios::in);
+
+
+        vsFile.seekg(0, std::ios::end);
+        fsFile.seekg(0, std::ios::end);
+
+        vertex_shader.reserve(vsFile.tellg());
+        fragment_shader.reserve(fsFile.tellg());
+
+        vsFile.seekg(0, std::ios::beg);
+        fsFile.seekg(0, std::ios::beg);
+
+        vertex_shader.assign((std::istreambuf_iterator<char>(vsFile)),
+                   std::istreambuf_iterator<char>());
+
+        fragment_shader.assign((std::istreambuf_iterator<char>(fsFile)),
+                             std::istreambuf_iterator<char>());
 
 
         SDL_Init(SDL_INIT_VIDEO);
@@ -42,18 +65,47 @@ namespace Simple2D{
 
         printf("Renderer: %s\n", renderer);
         printf("OpenGL Version: %s\n", version);
+        std::cout << std::endl;
 
         glEnable(GL_DEPTH);
         glDepthFunc(GL_LESS);
 
 
+        const char* tmp;
+
         GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vs, 1, &vertex_shader, NULL);
+        tmp = vertex_shader.c_str();
+        glShaderSource(vs, 1, &tmp, NULL);
         glCompileShader(vs);
 
+        GLint succses = 0;
+        glGetShaderiv(vs, GL_COMPILE_STATUS, &succses);
+        if(!succses){
+            GLint logSize = 0;
+            glGetShaderiv(vs, GL_INFO_LOG_LENGTH, &logSize);
+            char* buffer = new char[logSize];
+            glGetShaderInfoLog(vs, logSize, nullptr, buffer);
+            std::cout << "Vertex Shader Compile Errors: " << "\n";
+            std::cout << buffer << std::endl;
+            delete buffer;
+        }
+
         GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fs, 1, &fragment_shader, NULL);
+        tmp = fragment_shader.c_str();
+        glShaderSource(fs, 1, &tmp, NULL);
         glCompileShader(fs);
+
+        succses = 0;
+        glGetShaderiv(fs, GL_COMPILE_STATUS, &succses);
+        if(!succses){
+            GLint logSize = 0;
+            glGetShaderiv(fs, GL_INFO_LOG_LENGTH, &logSize);
+            char* buffer = new char[logSize];
+            glGetShaderInfoLog(fs, logSize, nullptr, buffer);
+            std::cout << "Fragment Shader Compile Errors: " << "\n";
+            std::cout << buffer << std::endl;
+            delete buffer;
+        }
 
         GLuint shader_programme = glCreateProgram();
         glAttachShader(shader_programme, vs);
