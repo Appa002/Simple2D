@@ -1,0 +1,1 @@
+Drop these files next to the engine executable to load a test map
