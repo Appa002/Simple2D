@@ -55,8 +55,8 @@ namespace Simple2D{
         void(*updatePointer)();
         void(*setupPointer)();
 
-        template<typename T> T* getAttribute(std::string name);
-        template<typename T> void addAttribute(std::string name, T* content);
+        template<typename T> T getAttribute(std::string name);
+        template<typename T> void addAttribute(std::string name, T content);
         template<typename T> void setAttribute(std::string name, T content);
         template<typename T> void removeAttribute(std::string name);
         template<typename T> Attribute findAttribute(std::string name);
@@ -71,7 +71,7 @@ namespace Simple2D{
 
 
 template <typename T>
-inline T*  Simple2D::GameObject::getAttribute(std::string name)
+inline T  Simple2D::GameObject::getAttribute(std::string name)
 {
     bool error = false;
     Attribute attr = findAttribute<T>(name, &error, 0);
@@ -79,7 +79,7 @@ inline T*  Simple2D::GameObject::getAttribute(std::string name)
         return 0;
     }
 
-    return reinterpret_cast<T*>(attr.content);
+    return reinterpret_cast<T>(attr.content);
 
 }
 
@@ -133,12 +133,12 @@ inline void Simple2D::GameObject::removeAttribute(std::string name)
 }
 
 template<typename T>
-inline void Simple2D::GameObject::addAttribute(std::string name, T* content)
+inline void Simple2D::GameObject::addAttribute(std::string name, T content)
 {
 
     for (unsigned int i = 0; i < GameObject::attributes.size(); i++) {
         if (GameObject::attributes.at(i).name == name) {
-            throw std::runtime_error("Such element allready exists");
+            throw std::runtime_error("Such element already exists");
         }
     }
 

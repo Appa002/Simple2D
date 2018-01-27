@@ -9,6 +9,7 @@
 #include <regex>
 #include <lua.hpp>
 #include <iostream>
+#include "types.h"
 #include "ExternalCodeLoadingWrapper.h"
 #include "GameObject.h"
 #include "Utils.h"

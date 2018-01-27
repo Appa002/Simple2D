@@ -1,5 +1,6 @@
 #include <stb_image.h>
 #include "../header/GameObject.h"
+#include "../header/types.h"
 
 Simple2D::GameObject::GameObject() {
     spriteHeight = new int(0);
@@ -29,6 +30,11 @@ Simple2D::GameObject::~GameObject() {
 
 
 void Simple2D::GameObject::render(){
+
+    if(findAttribute<Vec3>("transform").isValid()){
+        std::cout << getAttribute<Vec3*>("transform")->x << " ";
+        std::cout << getAttribute<Vec3*>("transform")->y << std::endl;
+    }
 
     if(!imageData)
         return;

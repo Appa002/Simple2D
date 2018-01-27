@@ -11,10 +11,11 @@
 
 #ifdef WIN32
 #define export extern "C" __declspec(dllexport)
-
 #else
 #define export extern "C"
 #endif
+
+#define ADD_PROPERTY(type, name) export type _prop_ ## name(){ return name; }
 
 Simple2D::GameObject* findGameObject(std::string name);
 

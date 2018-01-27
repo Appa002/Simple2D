@@ -2,8 +2,8 @@
 
 std::vector<Simple2D::GameObject*>* gameObjects;
 
-export void load(std::vector<Simple2D::GameObject*>* gameObjectsImport){
-    gameObjects = gameObjectsImport;
+export void _prop_gameObjects(std::vector<Simple2D::GameObject*>* import){
+    gameObjects = import;
 }
 
 Simple2D::GameObject* findGameObject(std::string name){

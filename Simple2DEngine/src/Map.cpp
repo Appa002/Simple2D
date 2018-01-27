@@ -51,6 +51,7 @@ int Simple2D::Map::load(std::string path) {
 
 int Simple2D::Map::loadGameObject(std::string path) {
     ExternalCode::Handle h = ExternalCode::open(path + "/external.so");
+
     auto* gObj = new GameObject();
 
     gObj->path = path;
@@ -59,8 +60,10 @@ int Simple2D::Map::loadGameObject(std::string path) {
     gObj->updatePointer = (void(*)())(ExternalCode::find(h, "update"));
     gameObjects->push_back(gObj);
 
-    auto loadFunc = (void(*)(std::vector<GameObject*>*))(ExternalCode::find(h, "load"));
+    auto loadFunc = (void(*)(std::vector<GameObject*>*))(ExternalCode::find(h, "_prop_gameObjects"));
     loadFunc(this->gameObjects);
+
+    ((void(*)()) (ExternalCode::find(h, "init"))) ();
 
     std::string luaPath = path + "/cfg.lua";
     lua_State* L = luaL_newstate();
@@ -96,26 +99,32 @@ int Simple2D::Map::queryScript(lua_State *L, GameObject *gObj, Simple2D::Externa
 
     Utils::pushToTop("valType", L);
     std::string type = (char*)lua_tostring(L, -1);
-
     lua_remove(L, -1);
 
 
     if (type == "int") {
-        gObj->addAttribute<int>(name, (int*)ExternalCode::find(handle, name));
+        auto propFunc = (int*(*)()) ExternalCode::find(handle, "_prop_"+name);
+        gObj->addAttribute<int*>(name, propFunc());
     }
 
     else if (type == "string") {
-        gObj->addAttribute<std::string>(name, (std::string*)ExternalCode::find(handle, name));
+        auto propFunc = (std::string*(*)()) ExternalCode::find(handle, "_prop_"+name);
+        gObj->addAttribute<std::string*>(name, propFunc());
     }
-
 
     else if (type == "boolean") {
-        gObj->addAttribute<bool>(name, (bool*)ExternalCode::find(handle, name));
+        auto propFunc = (bool*(*)()) ExternalCode::find(handle, "_prop_"+name);
+        gObj->addAttribute<bool*>(name, propFunc());
     }
 
-
     else if (type == "double") {
-        gObj->addAttribute<double>(name, (double*)ExternalCode::find(handle, name));
+        auto propFunc = (double*(*)()) ExternalCode::find(handle, "_prop_"+name);
+        gObj->addAttribute<double*>(name, propFunc());
+    }
+
+    else if (type == "vec3") {
+        auto propFunc = (Vec3*(*)()) ExternalCode::find(handle, "_prop_"+name);
+        gObj->addAttribute<Vec3*>(name, propFunc());
     }
     return 0;
 }
