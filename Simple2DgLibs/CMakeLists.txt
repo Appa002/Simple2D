@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 ADD_COMPILE_OPTIONS(-fPIC)
 
-add_library(Simple2DgLibs SHARED index.cpp Simple2D.h Simple2D.cpp)
+add_library(Simple2DgLibs SHARED index.cpp Simple2D.h Simple2D.cpp ../Simple2DEngine/header/types.h)
 
 set_target_properties(Simple2DgLibs PROPERTIES PREFIX "")
 set_target_properties(Simple2DgLibs PROPERTIES OUTPUT_NAME "external")
