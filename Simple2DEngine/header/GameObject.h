@@ -23,7 +23,7 @@ namespace Simple2D{
         bool isValid() {
             if (name == "")
                 return false;
-            if (content == 0)
+            if (content == nullptr)
                 return false;
             if (hash == 0)
                 return false;
@@ -37,34 +37,16 @@ namespace Simple2D{
 
     class  GameObject {
     private:
-        int* x;
-        int* y;
+        int* spriteWidth;
+        int* spriteHeight;
         int* n;
         int forceChannels = 4;
         unsigned char* imageData;
         GLuint* vao;
 
     public:
-        GameObject(){
-
-            x = new int(0);
-            x = new int(0);
-            x = new int(0);
-            vao = new GLuint(0);
-
-            Attribute attr;
-            attr.content = new int(0);
-            attr.hash = typeid(int).hash_code();
-            attr.name = "";
-
-            GameObject::attributes.push_back(attr);
-        }
-
-        ~GameObject(){
-            GameObject::removeAttribute<int>("");
-            if (GameObject::attributes.size() > 0)
-                std::cout << "Not all attributes have been removed" << std::endl;
-        }
+        GameObject();
+        ~GameObject();
 
         std::string name;
         std::string path;
@@ -168,6 +150,7 @@ inline void Simple2D::GameObject::addAttribute(std::string name, T* content)
     GameObject::attributes.push_back(attrib);
 
 }
+
 
 
 #endif //SIMPLE2DENGINE_GAMEOBJECT_H
