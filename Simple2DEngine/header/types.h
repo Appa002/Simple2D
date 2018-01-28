@@ -8,6 +8,12 @@
 namespace Simple2D{
     struct Vec3{
         float x,y,z;
+
+        Vec3() = default;
+
+        Vec3(float x, float y, float z){
+            this->x = x; this->y = y; this->z = z;
+        }
     };
 }
 
