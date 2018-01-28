@@ -131,7 +131,7 @@ namespace Simple2D{
             glUseProgram(shader_programme);
 
             Simple2D::MapManager::get()->getCurrentMap()->updateAll();
-            Simple2D::MapManager::get()->getCurrentMap()->renderAll();
+            Simple2D::MapManager::get()->getCurrentMap()->renderAll(shader_programme);
 
             SDL_GL_SwapWindow(window);
 
