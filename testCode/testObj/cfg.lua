@@ -3,7 +3,7 @@ data = {
     size = 1,
 
     attribute_0 = {
-        valType = "string",
-        name = "myStr"
+        valType = "vec3",
+        name = "transform"
     }
 }
