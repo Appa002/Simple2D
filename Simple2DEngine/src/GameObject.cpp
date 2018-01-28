@@ -1,6 +1,7 @@
 #include <stb_image.h>
 #include "../header/GameObject.h"
 #include "../header/types.h"
+#include "../header/MapManager.h"
 
 Simple2D::GameObject::GameObject() {
     spriteHeight = new int(0);
@@ -29,15 +30,42 @@ Simple2D::GameObject::~GameObject() {
 
 
 
-void Simple2D::GameObject::render(){
-
-    if(findAttribute<Vec3>("transform").isValid()){
-        std::cout << getAttribute<Vec3*>("transform")->x << " ";
-        std::cout << getAttribute<Vec3*>("transform")->y << std::endl;
-    }
-
+void Simple2D::GameObject::render(GLuint shaderProgramme) {
     if(!imageData)
         return;
+
+    if(findAttribute<Vec3*>("position").isValid()){
+        auto* posVec = getAttribute<Simple2D::Vec3*>("position");
+        GLint loc = glGetUniformLocation(shaderProgramme, "pos");
+        if(loc != -1){
+            float data[3];
+            *data = posVec->x;
+            *(data + 1) = posVec->y;
+            *(data + 2) = posVec->z;
+            glUniform3fv(loc, 1, data);
+        }
+    }
+
+    GameObject* camObj = findOtherGameObject("Camera");
+    if(camObj != nullptr){
+        if(camObj->getAttribute<Simple2D::Vec3*>("position")){
+            auto* camPos = getAttribute<Simple2D::Vec3*>("position");
+            GLint loc = glGetUniformLocation(shaderProgramme, "camPos");
+            if(loc != -1){
+                float data[3];
+                *data = camPos->x;
+                *(data + 1) = camPos->y;
+                *(data + 2) = camPos->z;
+                glUniform3fv(loc, 1, data);
+            }
+        }
+    }else{
+        GLint loc = glGetUniformLocation(shaderProgramme, "camPos");
+        if(loc != -1){
+            float data[3] {0.0f, 0.0f, 0.0f};
+            glUniform3fv(loc, 1, data);
+        }
+    }
 
 
     GLfloat pos[]{
@@ -134,4 +162,16 @@ void Simple2D::GameObject::preSetup() {
             bottom++;
         }
     }
+}
+
+
+Simple2D::GameObject *Simple2D::GameObject::findOtherGameObject(std::string name) {
+
+    for(auto gObj : *MapManager::get()->getCurrentMap()->gameObjects){
+        if(gObj->name == name){
+            return gObj;
+        }
+    }
+
+    return nullptr;
 }
