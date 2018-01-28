@@ -152,9 +152,9 @@ void Simple2D::Map::updateAll() {
     }
 }
 
-void Simple2D::Map::renderAll() {
+void Simple2D::Map::renderAll(GLuint shaderProgramm) {
     for(auto* gameObject : *this->gameObjects){
-        gameObject->render();
+        gameObject->render(shaderProgramm);
     }
 }
 
