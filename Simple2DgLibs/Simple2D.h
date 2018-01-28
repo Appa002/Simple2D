@@ -17,7 +17,9 @@
 
 #define ADD_PROPERTY(type, name) export type _prop_ ## name(){ return name; }
 
-Simple2D::GameObject* findGameObject(std::string name);
+namespace Simple2D{
+    Simple2D::GameObject* findGameObject(std::string name);
+}
 
 
 #endif //SIMPLE2DENGINE_SIMPLE2D_H

@@ -6,7 +6,7 @@ export void _prop_gameObjects(std::vector<Simple2D::GameObject*>* import){
     gameObjects = import;
 }
 
-Simple2D::GameObject* findGameObject(std::string name){
+Simple2D::GameObject* Simple2D::findGameObject(std::string name){
     for(auto gObj : *gameObjects){
         if(gObj->name == name){
             return gObj;
