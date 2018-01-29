@@ -46,7 +46,7 @@ namespace Simple2D::ExternalCode{
         h.handle = LoadLibrary(path.c_str());
 #else
         Handle h;
-        h.handle = dlopen(path.c_str(), RTLD_NOW);
+        h.handle = dlopen(path.c_str(), RTLD_NOW | RTLD_GLOBAL);
 #endif
         return h;
     }
@@ -57,7 +57,7 @@ namespace Simple2D::ExternalCode{
         h.handle = LoadLibrary(path.c_str());
 #else
         Handle h;
-        h.handle = dlopen(path.c_str(), RTLD_NOW);
+        h.handle = dlopen(path.c_str(), RTLD_NOW | RTLD_GLOBAL);
 #endif
         return h;
     }
