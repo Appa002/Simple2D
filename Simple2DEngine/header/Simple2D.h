@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <string>
-#include "../Simple2DEngine/header/GameObject.h"
+#include "GameObject.h"
 
 #ifdef WIN32
 #define export extern "C" __declspec(dllexport)
