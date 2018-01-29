@@ -130,6 +130,9 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
 
 void Simple2D::GameObject::preSetup() {
     glGenVertexArrays(1, vao);
+
+
+    return;
     int n;
     imageData = stbi_load((path + "/sprite.png").c_str(), spriteWidth, spriteHeight, &n, 4);
 
@@ -175,3 +178,40 @@ Simple2D::GameObject *Simple2D::GameObject::findOtherGameObject(std::string name
 
     return nullptr;
 }
+
+
+void Simple2D::GameObject::loadNewSprite(std::string path) {
+    int n;
+    imageData = stbi_load(path.c_str(), spriteWidth, spriteHeight, &n, 4);
+
+    if(!imageData){
+        printf("[WARNING] GameObject \"%s\" does not contain sprite.png at %s \n", name.c_str(), path.c_str());
+        return;
+    }
+
+    // Check if dimensions are not a power of two.
+    // Older GPUs can't handel textures which are not a power of two.
+    if((*spriteWidth & (*spriteWidth - 1)) != 0 || (*spriteWidth & (*spriteHeight - 1)) != 0){
+        printf("WARNING: Dimensions not a power of two for GameObject \"%s\" \n", name.c_str());
+    }
+
+    // Filp Images upside down
+    int widthInBytes = 4 * *spriteWidth;
+    unsigned char* top = nullptr;
+    unsigned char* bottom = nullptr;
+    unsigned char tmp = 0;
+    int halfHeight = *spriteHeight / 2;
+
+    for(int row = 0; row < halfHeight; row++){
+        top = imageData + row * widthInBytes;
+        bottom = imageData + (*spriteHeight - row - 1) * widthInBytes;
+        for(int col = 0; col < widthInBytes; col++){
+            tmp = *top;
+            *top = *bottom;
+            *bottom = tmp;
+            top++;
+            bottom++;
+        }
+    }
+}
+

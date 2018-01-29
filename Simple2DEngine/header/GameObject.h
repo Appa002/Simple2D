@@ -63,10 +63,11 @@ namespace Simple2D{
         template<typename T> Attribute findAttribute(std::string name, bool* error, unsigned int* idx);
         void render(GLuint shaderProgramme);
         void preSetup();
-        GameObject* findOtherGameObject(std::string name);
+        void loadNewSprite(std::string path);
 
     private:
         std::vector<Attribute> attributes;
+        GameObject* findOtherGameObject(std::string name);
     };
 }
 
@@ -151,5 +152,4 @@ inline void Simple2D::GameObject::addAttribute(std::string name, T content)
     GameObject::attributes.push_back(attrib);
 
 }
-
 #endif //SIMPLE2DENGINE_GAMEOBJECT_H
