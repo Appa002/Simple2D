@@ -51,7 +51,6 @@ int Simple2D::Map::load(std::string path) {
 
 int Simple2D::Map::loadGameObject(std::string path) {
     ExternalCode::Handle h = ExternalCode::open(path + "/external.so");
-
     auto* gObj = new GameObject();
 
     gObj->path = path;
