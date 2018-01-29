@@ -1,4 +1,4 @@
-#include "../Simple2DEngine/header/Simple2D.h"
+#include "../header/Simple2D.h"
 
 std::vector<Simple2D::GameObject*>* gameObjects;
 
