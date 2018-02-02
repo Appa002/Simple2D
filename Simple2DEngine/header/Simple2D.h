@@ -19,6 +19,8 @@
 
 namespace Simple2D{
     Simple2D::GameObject* findGameObject(std::string name);
+    void cloneGameObject(GameObject *toClone, std::string newName);
+    std::vector<Simple2D::GameObject*>* getVec();
 }
 
 
