@@ -1,4 +1,5 @@
 #include <stb_image.h>
+#include <iostream>
 #include "../header/GameObject.h"
 #include "../header/types.h"
 #include "../header/MapManager.h"
@@ -28,8 +29,6 @@ Simple2D::GameObject::~GameObject() {
         std::cout << "Not all attributes have been removed" << std::endl;
 }
 
-
-
 void Simple2D::GameObject::render(GLuint shaderProgramme) {
     if(!imageData)
         return;
@@ -49,7 +48,7 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
     GameObject* camObj = findOtherGameObject("Camera");
     if(camObj != nullptr){
         if(camObj->getAttribute<Simple2D::Vec3*>("position")){
-            auto* camPos = getAttribute<Simple2D::Vec3*>("position");
+            auto* camPos = camObj->getAttribute<Simple2D::Vec3*>("position");
             GLint loc = glGetUniformLocation(shaderProgramme, "camPos");
             if(loc != -1){
                 float data[3];
@@ -127,12 +126,9 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
 
 }
 
-
 void Simple2D::GameObject::preSetup() {
     glGenVertexArrays(1, vao);
 
-
-    return;
     int n;
     imageData = stbi_load((path + "/sprite.png").c_str(), spriteWidth, spriteHeight, &n, 4);
 
@@ -167,9 +163,7 @@ void Simple2D::GameObject::preSetup() {
     }
 }
 
-
 Simple2D::GameObject *Simple2D::GameObject::findOtherGameObject(std::string name) {
-
     for(auto gObj : *MapManager::get()->getCurrentMap()->gameObjects){
         if(gObj->name == name){
             return gObj;
@@ -178,7 +172,6 @@ Simple2D::GameObject *Simple2D::GameObject::findOtherGameObject(std::string name
 
     return nullptr;
 }
-
 
 void Simple2D::GameObject::loadNewSprite(std::string path) {
     int n;
@@ -192,7 +185,7 @@ void Simple2D::GameObject::loadNewSprite(std::string path) {
     // Check if dimensions are not a power of two.
     // Older GPUs can't handel textures which are not a power of two.
     if((*spriteWidth & (*spriteWidth - 1)) != 0 || (*spriteWidth & (*spriteHeight - 1)) != 0){
-        printf("WARNING: Dimensions not a power of two for GameObject \"%s\" \n", name.c_str());
+        printf("[WARNING] Dimensions not a power of two for GameObject \"%s\" \n", name.c_str());
     }
 
     // Filp Images upside down
@@ -215,3 +208,7 @@ void Simple2D::GameObject::loadNewSprite(std::string path) {
     }
 }
 
+
+std::vector<Simple2D::Attribute>* Simple2D::GameObject::getAttributeVec() {
+    return &this->attributes;
+}

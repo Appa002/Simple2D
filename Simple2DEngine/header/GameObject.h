@@ -39,11 +39,8 @@ namespace Simple2D{
     private:
         int* spriteWidth;
         int* spriteHeight;
-        int* n;
-        int forceChannels = 4;
         unsigned char* imageData;
         GLuint* vao;
-
     public:
         GameObject();
         ~GameObject();
@@ -65,6 +62,7 @@ namespace Simple2D{
         void preSetup();
         void loadNewSprite(std::string path);
 
+        std::vector<Attribute>* getAttributeVec();
     private:
         std::vector<Attribute> attributes;
         GameObject* findOtherGameObject(std::string name);
@@ -152,4 +150,5 @@ inline void Simple2D::GameObject::addAttribute(std::string name, T content)
     GameObject::attributes.push_back(attrib);
 
 }
+
 #endif //SIMPLE2DENGINE_GAMEOBJECT_H
