@@ -7,19 +7,16 @@
 Simple2D::Vec3* position;
 ADD_PROPERTY(Simple2D::Vec3*, position);
 
-extern "C" {
 
 export void init() {
     position = new Simple2D::Vec3(0.0f, 0.0f, 0);
 }
 
 export void setup() {
-    Simple2D::findGameObject("TestObj")->loadNewSprite("./TestObj/sprite.png");
+    //Simple2D::findGameObject("TestObj")->loadNewSprite("./TestObj/sprite.png");
 }
 
 
 export void update() {
-
-}
 
 }
