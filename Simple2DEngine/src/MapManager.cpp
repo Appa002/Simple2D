@@ -19,7 +19,7 @@ int Simple2D::MapManager::loadMap(std::string path) {
     return 0;
 }
 
-int Simple2D::MapManager::unLoadMap() {
+int Simple2D::MapManager::unloadMap() {
     this->curMap->remove();
     delete curMap;
     curMap = nullptr;
