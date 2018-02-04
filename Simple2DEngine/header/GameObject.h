@@ -51,6 +51,7 @@ namespace Simple2D{
 
         void(*updatePointer)();
         void(*setupPointer)();
+        void(*onEventPointer)(SDL_Event e);
 
         template<typename T> T getAttribute(std::string name);
         template<typename T> void addAttribute(std::string name, T content);

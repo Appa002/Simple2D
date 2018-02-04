@@ -57,6 +57,7 @@ int Simple2D::Map::loadGameObject(std::string path) {
     gObj->handle = h;
     gObj->setupPointer = (void(*)())(ExternalCode::find(h, "setup"));
     gObj->updatePointer = (void(*)())(ExternalCode::find(h, "update"));
+    gObj->onEventPointer = (void(*)(SDL_Event))(ExternalCode::find(h, "onEvent"));
     gameObjects->push_back(gObj);
 
     auto loadFunc = (void(*)(std::vector<GameObject*>*))(ExternalCode::find(h, "_prop_gameObjects"));
@@ -151,9 +152,9 @@ void Simple2D::Map::updateAll() {
     }
 }
 
-void Simple2D::Map::renderAll(GLuint shaderProgramm) {
+void Simple2D::Map::renderAll(GLuint shaderProgramme) {
     for(auto* gameObject : *this->gameObjects){
-        gameObject->render(shaderProgramm);
+        gameObject->render(shaderProgramme);
     }
 }
 
@@ -167,6 +168,25 @@ void Simple2D::Map::setupAll() {
             }
         } catch (...){
             printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
+        }
+
+
+    }
+}
+
+void Simple2D::Map::eventHandelAll(SDL_Event e) {
+    for(auto g : *this->gameObjects){
+        if(g->onEventPointer == nullptr)
+            continue;
+
+        try {
+            try {
+                g->onEventPointer(e);
+            } catch (std::exception& e){
+                printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent(SDL_Event e)\", error: \n%s \n", name.c_str(), e.what());
+            }
+        } catch (...){
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent(SDL_Event e)\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
         }
 
 

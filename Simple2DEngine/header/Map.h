@@ -29,7 +29,8 @@ namespace Simple2D{
         void remove();
         void updateAll();
         void setupAll();
-        void renderAll(GLuint shaderProgramm);
+        void eventHandelAll(SDL_Event e);
+        void renderAll(GLuint shaderProgramme);
 
         std::vector<GameObject*>* gameObjects;
     };

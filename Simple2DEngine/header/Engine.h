@@ -125,8 +125,10 @@ namespace Simple2D{
                 if (event.type == SDL_QUIT) {
                     bQuit = true;
                 }
-            }
 
+                Simple2D::MapManager::get()->getCurrentMap()->eventHandelAll(event);
+
+            }
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glUseProgram(shader_programme);
 
