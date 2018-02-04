@@ -51,8 +51,27 @@ namespace Simple2D{
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-        SDL_Window* window = SDL_CreateWindow("Simple2D Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+
+        lua_State* L = luaL_newstate();
+        luaL_openlibs(L);
+
+        if (luaL_loadfile(L, "./0.lua") || lua_pcall(L, 0, 0, 0)) {
+            printf("Error");
+            return -1;
+        }
+
+        Utils::pushToTop("data.resolutionX", L);
+        int resX = (int)lua_tointeger(L, -1);
+        lua_pop(L, 1);
+
+        Utils::pushToTop("data.resolutionY", L);
+        int resY = (int)lua_tointeger(L, -1);
+        lua_pop(L, 1);
+
+        SDL_Window* window = SDL_CreateWindow("Simple2D Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, resX, resY, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
         SDL_GLContext context = SDL_GL_CreateContext(window);
+        SDL_SetWindowResizable(window, SDL_TRUE);
+
 
         SDL_GL_MakeCurrent(window, context);
 
