@@ -30,6 +30,13 @@ Simple2D::GameObject::~GameObject() {
 }
 
 void Simple2D::GameObject::render(GLuint shaderProgramme) {
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER,0.4);
+    glEnable(GL_BLEND);
+    glColor4f(1.0,1.0,1.0,1.0);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
     if(!imageData)
         return;
 
@@ -41,6 +48,27 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
             *data = posVec->x;
             *(data + 1) = posVec->y;
             *(data + 2) = posVec->z;
+            glUniform3fv(loc, 1, data);
+        }
+    }
+
+    if(findAttribute<Vec3*>("scale").isValid()){
+        auto* scaleVec = getAttribute<Simple2D::Vec3*>("scale");
+        GLint loc = glGetUniformLocation(shaderProgramme, "scale");
+        if(loc != -1){
+            float data[3];
+            *data = scaleVec->x;
+            *(data + 1) = scaleVec->y;
+            *(data + 2) = scaleVec->z;
+            glUniform3fv(loc, 1, data);
+        }
+    }else{
+        GLint loc = glGetUniformLocation(shaderProgramme, "scale");
+        if(loc != -1){
+            float data[3];
+            *data = 1;
+            *(data + 1) = 1;
+            *(data + 2) = 1;
             glUniform3fv(loc, 1, data);
         }
     }
@@ -207,7 +235,6 @@ void Simple2D::GameObject::loadNewSprite(std::string path) {
         }
     }
 }
-
 
 std::vector<Simple2D::Attribute>* Simple2D::GameObject::getAttributeVec() {
     return &this->attributes;
