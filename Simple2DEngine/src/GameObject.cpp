@@ -8,14 +8,6 @@ Simple2D::GameObject::GameObject() {
     spriteHeight = new int(0);
     spriteWidth = new int(0);
     vao = new GLuint(0);
-
-    Attribute attr;
-    attr.content = new int(0);
-    attr.hash = typeid(int).hash_code();
-    attr.name = "";
-
-    GameObject::attributes.push_back(attr);
-
 }
 
 Simple2D::GameObject::~GameObject() {
@@ -23,10 +15,7 @@ Simple2D::GameObject::~GameObject() {
     delete spriteHeight;
     delete spriteWidth;
     delete vao;
-
-    GameObject::removeAttribute<int>("");
-    if (!GameObject::attributes.empty())
-        std::cout << "Not all attributes have been removed" << std::endl;
+    delete behavior;
 }
 
 void Simple2D::GameObject::render(GLuint shaderProgramme) {
@@ -40,26 +29,24 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
     if(!imageData)
         return;
 
-    if(findAttribute<Vec3*>("position").isValid()){
-        auto* posVec = getAttribute<Simple2D::Vec3*>("position");
+    if(behavior->position != nullptr){
         GLint loc = glGetUniformLocation(shaderProgramme, "pos");
         if(loc != -1){
             float data[3];
-            *data = posVec->x;
-            *(data + 1) = posVec->y;
-            *(data + 2) = posVec->z;
+            *data = behavior->position->x;
+            *(data + 1) = behavior->position->y;
+            *(data + 2) = behavior->position->z;
             glUniform3fv(loc, 1, data);
         }
     }
 
-    if(findAttribute<Vec3*>("scale").isValid()){
-        auto* scaleVec = getAttribute<Simple2D::Vec3*>("scale");
+    if(behavior->scale != nullptr){
         GLint loc = glGetUniformLocation(shaderProgramme, "scale");
         if(loc != -1){
             float data[3];
-            *data = scaleVec->x;
-            *(data + 1) = scaleVec->y;
-            *(data + 2) = scaleVec->z;
+            *data = behavior->scale->x;
+            *(data + 1) = behavior->scale->y;
+            *(data + 2) = behavior->scale->z;
             glUniform3fv(loc, 1, data);
         }
     }else{
@@ -74,17 +61,14 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
     }
 
     GameObject* camObj = findOtherGameObject("Camera");
-    if(camObj != nullptr){
-        if(camObj->getAttribute<Simple2D::Vec3*>("position")){
-            auto* camPos = camObj->getAttribute<Simple2D::Vec3*>("position");
-            GLint loc = glGetUniformLocation(shaderProgramme, "camPos");
-            if(loc != -1){
-                float data[3];
-                *data = camPos->x;
-                *(data + 1) = camPos->y;
-                *(data + 2) = camPos->z;
-                glUniform3fv(loc, 1, data);
-            }
+    if(camObj != nullptr && camObj->behavior->position != nullptr){
+        GLint loc = glGetUniformLocation(shaderProgramme, "camPos");
+        if(loc != -1){
+            float data[3];
+            *data = camObj->behavior->position->x;
+            *(data + 1) = camObj->behavior->position->y;
+            *(data + 2) = camObj->behavior->position->z;
+            glUniform3fv(loc, 1, data);
         }
     }else{
         GLint loc = glGetUniformLocation(shaderProgramme, "camPos");
@@ -93,7 +77,6 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
             glUniform3fv(loc, 1, data);
         }
     }
-
 
     GLfloat pos[]{
             -1.0f, 1.0f, 0.0f,
@@ -234,8 +217,4 @@ void Simple2D::GameObject::loadNewSprite(std::string path) {
             bottom++;
         }
     }
-}
-
-std::vector<Simple2D::Attribute>* Simple2D::GameObject::getAttributeVec() {
-    return &this->attributes;
 }

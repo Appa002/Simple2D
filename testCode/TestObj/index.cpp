@@ -1,24 +1,19 @@
-#include <string>
 #include "../../Simple2DEngine/header/Simple2D.h"
-#include "../../Simple2DEngine/header/types.h"
-#include <iostream>
-#include <SDL2/SDL.h>
 
+using namespace Simple2D;
 
-Simple2D::Vec3* position;
-ADD_PROPERTY(Simple2D::Vec3*, position);
+class Camera : public Behavior{
+    void init() override {
+    }
 
-Simple2D::Vec3* scale;
-ADD_PROPERTY(Simple2D::Vec3*, scale);
+    void update() override {
+    }
 
-export void init(){
-    position = new Simple2D::Vec3(0, 0, 0);
-    scale = new Simple2D::Vec3(1, 1, 1);
-}
+    void setup() override {
+    }
 
-export void setup(){
-}
+    void onEvent(SDL_Event& e) override {
+    }
+};
 
-export void update(){
-}
-
+REGISTER_GAME_OBJECT(Camera)

@@ -1,4 +1,7 @@
 #include "../header/Simple2D.h"
+#include "../header/types.h"
+#include "../header/Utils.h"
+#include <lua.hpp>
 
 std::vector<Simple2D::GameObject*>* gameObjects;
 
@@ -15,23 +18,7 @@ Simple2D::GameObject* Simple2D::findGameObject(std::string name){
     return nullptr;
 }
 
-std::vector<Simple2D::GameObject *> *Simple2D::getVec() {
-    return gameObjects;
-}
-
-void Simple2D::cloneGameObject(GameObject *toClone, std::string newName) {
-    GameObject* gameObject = new GameObject();
-    gameObject->handle = toClone->handle;
-    gameObject->updatePointer = toClone->updatePointer;
-    gameObject->setupPointer = toClone->setupPointer;
-    gameObject->path = toClone->path;
-    gameObject->name = newName;
-    gameObject->preSetup();
-
-    for(Attribute& attr : *toClone->getAttributeVec()){
-        toClone->getAttributeVec()->push_back(attr);
-    }
-
-    gameObjects->push_back(gameObject);
+int Simple2D::cloneGameObject(GameObject *toClone, std::string newName) {
     std::cout << "Created new object" << std::endl;
+    return 0;
 }

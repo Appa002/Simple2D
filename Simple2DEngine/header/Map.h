@@ -18,7 +18,6 @@ namespace Simple2D{
     class Map {
     private:
         int loadGameObject(std::string path);
-        int queryScript(lua_State *L, GameObject *gObj, Simple2D::ExternalCode::Handle handle);
     public:
         Map(std::string& path);
         Map();

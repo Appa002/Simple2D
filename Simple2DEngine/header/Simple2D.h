@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include "GameObject.h"
+#include "Behavior.h"
 
 #ifdef WIN32
 #define export extern "C" __declspec(dllexport)
@@ -15,12 +16,11 @@
 #define export extern "C"
 #endif
 
-#define ADD_PROPERTY(type, name) export type _prop_ ## name(){ return name; }
+#define REGISTER_GAME_OBJECT(name) export Simple2D::Behavior* _entry_point(){return new name;}
 
 namespace Simple2D{
     Simple2D::GameObject* findGameObject(std::string name);
-    void cloneGameObject(GameObject *toClone, std::string newName);
-    std::vector<Simple2D::GameObject*>* getVec();
+    int cloneGameObject(GameObject *toClone, std::string newName);
 }
 
 

@@ -1,22 +1,27 @@
-#include <string>
-#include <iostream>
 #include "../../Simple2DEngine/header/Simple2D.h"
-#include "../../Simple2DEngine/header/types.h"
 
+using namespace Simple2D;
 
-Simple2D::Vec3* position;
-ADD_PROPERTY(Simple2D::Vec3*, position);
+class Camera : public Behavior{
+    Vec3* position = nullptr;
 
+    void init() override {
+        position = new Vec3(0.0f, 0.0f, 0.0f);
+    }
 
-export void init() {
-    position = new Simple2D::Vec3(0.0f, 0.0f, 0);
-}
+    void update() override {
+        std::cout << "Oi, Oi" << std::endl;
+    }
 
-export void setup() {
-    //Simple2D::findGameObject("TestObj")->loadNewSprite("./TestObj/sprite.png");
-}
+    void setup() override {
+        std::cout << "SetmeUp inside" << std::endl;
+    }
 
+    void onEvent(SDL_Event& e) override {
+        if(e.type == SDL_KEYDOWN){
+            std::cout << "Aua" << std::endl;
+        }
+    }
+};
 
-export void update() {
-
-}
+REGISTER_GAME_OBJECT(Camera)
