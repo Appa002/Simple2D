@@ -29,24 +29,24 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
     if(!imageData)
         return;
 
-    if(behavior->position != nullptr){
+    if(behavior->existAttribute("position")){
         GLint loc = glGetUniformLocation(shaderProgramme, "pos");
         if(loc != -1){
             float data[3];
-            *data = behavior->position->x;
-            *(data + 1) = behavior->position->y;
-            *(data + 2) = behavior->position->z;
+            *data = behavior->getAttribute<Vec3>("position").x;
+            *(data + 1) = behavior->getAttribute<Vec3>("position").y;
+            *(data + 2) = behavior->getAttribute<Vec3>("position").z;
             glUniform3fv(loc, 1, data);
         }
     }
 
-    if(behavior->scale != nullptr){
+    if(behavior->existAttribute("scale")){
         GLint loc = glGetUniformLocation(shaderProgramme, "scale");
         if(loc != -1){
             float data[3];
-            *data = behavior->scale->x;
-            *(data + 1) = behavior->scale->y;
-            *(data + 2) = behavior->scale->z;
+            *data = behavior->getAttribute<Vec3>("scale").x;
+            *(data + 1) = behavior->getAttribute<Vec3>("scale").y;
+            *(data + 2) = behavior->getAttribute<Vec3>("scale").z;
             glUniform3fv(loc, 1, data);
         }
     }else{
@@ -61,13 +61,13 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
     }
 
     GameObject* camObj = findOtherGameObject("Camera");
-    if(camObj != nullptr && camObj->behavior->position != nullptr){
+    if(camObj != nullptr && camObj->behavior->existAttribute("position")){
         GLint loc = glGetUniformLocation(shaderProgramme, "camPos");
         if(loc != -1){
             float data[3];
-            *data = camObj->behavior->position->x;
-            *(data + 1) = camObj->behavior->position->y;
-            *(data + 2) = camObj->behavior->position->z;
+            *data = camObj->behavior->getAttribute<Vec3>("position").x;
+            *(data + 1) = camObj->behavior->getAttribute<Vec3>("position").y;
+            *(data + 2) = camObj->behavior->getAttribute<Vec3>("position").z;
             glUniform3fv(loc, 1, data);
         }
     }else{
