@@ -7,6 +7,7 @@ class Camera : public Behavior{
 
     void init() override {
         position = new Vec3(0.0f, 0.0f, 0.0f);
+        addAttribute<Vec3>("position", position);
     }
 
     void update() override {
