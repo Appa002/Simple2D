@@ -34,6 +34,7 @@ namespace Simple2D{
         void render(GLuint shaderProgramme);
         void preSetup();
         void loadNewSprite(std::string path);
+        void remove();
 
     private:
         GameObject* findOtherGameObject(std::string name);
