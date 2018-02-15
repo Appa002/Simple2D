@@ -14,7 +14,7 @@ namespace Simple2D {
         void* content;
         std::string name;
         size_t typeHash;
-        Attribute() : content(nullptr), typeHash(0){}
+        Attribute() : content(nullptr), typeHash(0), name(""){}
         template <class T> Attribute* set(std::string& name ,T* content) {
             this->name = name;
             this->content = content;
@@ -46,6 +46,36 @@ namespace Simple2D {
 
 
     public:
+        size_t amountOfAttributes(){return attributes.size();}
+
+        template <class T> int deleteAttribute(std::string& name){
+            for(auto attrib : attributes){
+                if(attrib->name == name){
+                    if(attrib->typeHash != typeid(T).hash_code())
+                        throw std::runtime_error("Deleting attribute \"" + name + "\" with incorrect type\"" + std::string(typeid(T).name()) + "\"");
+
+                    delete reinterpret_cast<T*>(attrib->content);
+                    return 0;
+                }
+            }
+            return -1;
+        }
+        template <class T> int deleteAttribute(std::string&& name){
+            size_t i = 0;
+            for(auto attrib : attributes){
+                if(attrib->name == name){
+                    if(attrib->typeHash != typeid(T).hash_code())
+                        throw std::runtime_error("Deleting attribute \"" + name + "\" with incorrect type\"" + std::string(typeid(T).name()) + "\"");
+
+                    attributes.erase(attributes.begin() + i);
+                    delete reinterpret_cast<T*>(attrib->content);
+                    return 0;
+                }
+                i++;
+            }
+            return -1;
+        }
+
         template <class T> T getAttribute(std::string& name){
             for(auto attr : attributes){
                 if(attr->name == name){
@@ -69,15 +99,19 @@ namespace Simple2D {
             for(auto attr : attributes){
                 if(attr->name == name){
                     *(reinterpret_cast<T*>(attr->content)) = value;
+                    return 0;
                 }
             }
+            return -1;
         }
         template <class T> int setAttribute(std::string&& name, T value){
             for(auto attr : attributes){
                 if(attr->name == name){
                     *(reinterpret_cast<T*>(attr->content)) = value;
+                    return 0;
                 }
             }
+            return -1;
         }
 
         bool existAttribute(std::string& name){
@@ -98,6 +132,7 @@ namespace Simple2D {
         virtual void init() = 0;
         virtual void update() = 0;
         virtual void setup() = 0;
+        virtual void onRemoval() {};
         virtual void onEvent(SDL_Event& e) {};
     };
 }
