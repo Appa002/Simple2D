@@ -38,6 +38,15 @@ void Simple2D::GameObject::render(GLuint shaderProgramme) {
             *(data + 2) = behavior->getAttribute<Vec3>("position").z;
             glUniform3fv(loc, 1, data);
         }
+    }else{
+        GLint loc = glGetUniformLocation(shaderProgramme, "pos");
+        if(loc != -1) {
+            float data[3];
+            *data = 0.0f;
+            *(data + 1) = 0.0f;
+            *(data + 2) = 0.0f;
+            glUniform3fv(loc, 1, data);
+        }
     }
 
     if(behavior->existAttribute("scale")){
@@ -216,5 +225,17 @@ void Simple2D::GameObject::loadNewSprite(std::string path) {
             top++;
             bottom++;
         }
+    }
+}
+
+void Simple2D::GameObject::remove() {
+    auto vec = *MapManager::get()->getCurrentMap()->gameObjects;
+    unsigned int i = 0;
+    for(auto objAddress :vec){
+        if(objAddress == this){
+            vec.erase(vec.begin() + i);
+            return;
+        }
+        i++;
     }
 }
