@@ -11,11 +11,9 @@ class Camera : public Behavior{
     }
 
     void update() override {
-        std::cout << "Oi, Oi" << std::endl;
     }
 
     void setup() override {
-        std::cout << "SetmeUp inside" << std::endl;
     }
 
     void onEvent(SDL_Event& e) override {
