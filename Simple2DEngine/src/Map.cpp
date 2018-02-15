@@ -90,7 +90,6 @@ void Simple2D::Map::updateAll() {
             try {
                 g->behavior->update();
                 if(g->isMarkedForDeletion()){
-                    delete g->behavior;
                     delete g;
                 }
             } catch (std::exception& e){
@@ -114,7 +113,6 @@ void Simple2D::Map::setupAll() {
             try {
                 g->behavior->setup();
                 if(g->isMarkedForDeletion()){
-                    delete g->behavior;
                     delete g;
                 }
             } catch (std::exception& e){
@@ -134,7 +132,6 @@ void Simple2D::Map::eventHandelAll(SDL_Event e) {
             try {
                 g->behavior->onEvent(e);
                 if(g->isMarkedForDeletion()){
-                    delete g->behavior;
                     delete g;
                 }
             } catch (std::exception& e){
