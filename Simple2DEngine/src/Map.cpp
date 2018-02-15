@@ -78,7 +78,7 @@ int Simple2D::Map::loadGameObject(std::string path) {
 
 void Simple2D::Map::remove() {
     for(auto* g : *gameObjects){
-        delete g;
+        g->remove();
     }
     delete gameObjects;
     gameObjects = nullptr;

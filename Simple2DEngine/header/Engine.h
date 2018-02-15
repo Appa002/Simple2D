@@ -145,18 +145,21 @@ namespace Simple2D{
                     Simple2D::MapManager::get()->getCurrentMap()->remove();
                     bQuit = true;
                 }
-
-                Simple2D::MapManager::get()->getCurrentMap()->eventHandelAll(event);
+                if(!bQuit)
+                    Simple2D::MapManager::get()->getCurrentMap()->eventHandelAll(event);
 
             }
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glUseProgram(shader_programme);
 
-            Simple2D::MapManager::get()->getCurrentMap()->updateAll();
-            Simple2D::MapManager::get()->getCurrentMap()->renderAll(shader_programme);
+            if(!bQuit) {
 
-            SDL_GL_SwapWindow(window);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glUseProgram(shader_programme);
 
+                Simple2D::MapManager::get()->getCurrentMap()->updateAll();
+                Simple2D::MapManager::get()->getCurrentMap()->renderAll(shader_programme);
+
+                SDL_GL_SwapWindow(window);
+            }
         }
 
         SDL_DestroyWindow(window);

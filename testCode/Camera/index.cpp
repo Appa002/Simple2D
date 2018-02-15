@@ -16,6 +16,10 @@ class Camera : public Behavior{
     void setup() override {
     }
 
+    void onRemoval() override{
+        deleteAttribute<Vec3>("position");
+    }
+
     void onEvent(SDL_Event& e) override {
         if(e.type == SDL_KEYDOWN){
             std::cout << "Aua" << std::endl;
