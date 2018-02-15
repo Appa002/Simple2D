@@ -16,7 +16,13 @@ class TestObj : public Behavior{
     }
 
     void setup() override {
-        cloneGameObject(findGameObject("TestObj"), "0")->behavior->setAttribute<Vec3>("position", Vec3(0.05f, 0.5f, 0.0f));
+        findGameObject(this)->remove();
+        // cloneGameObject(findGameObject("TestObj"), "0")->behavior->setAttribute<Vec3>("position", Vec3(0.05f, 0.5f, 0.0f));
+    }
+
+    void onRemoval() override {
+        deleteAttribute<Vec3>("scale");
+        deleteAttribute<Vec3>("position");
     }
 
     void onEvent(SDL_Event& e) override {
