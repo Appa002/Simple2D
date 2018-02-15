@@ -229,13 +229,18 @@ void Simple2D::GameObject::loadNewSprite(std::string path) {
 }
 
 void Simple2D::GameObject::remove() {
-    auto vec = *MapManager::get()->getCurrentMap()->gameObjects;
+    auto vec = MapManager::get()->getCurrentMap()->gameObjects;
     unsigned int i = 0;
-    for(auto objAddress :vec){
+    for(auto objAddress : *vec){
         if(objAddress == this){
-            vec.erase(vec.begin() + i);
+            vec->erase(vec->begin() + i);
+            this->markedForDeletion = true;
             return;
         }
         i++;
     }
+}
+
+bool Simple2D::GameObject::isMarkedForDeletion() {
+    return this->markedForDeletion;
 }
