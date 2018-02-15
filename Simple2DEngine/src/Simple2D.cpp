@@ -15,7 +15,7 @@ Simple2D::GameObject* Simple2D::findGameObject(std::string name){
             return gObj;
         }
     }
-    return nullptr;
+   return nullptr;
 }
 
 Simple2D::GameObject * Simple2D::cloneGameObject(GameObject *toClone, std::string newName) {
@@ -34,4 +34,14 @@ Simple2D::GameObject * Simple2D::cloneGameObject(GameObject *toClone, std::strin
 
     std::cout << "Created new object" << std::endl;
     return gameObject;
+}
+
+Simple2D::GameObject *Simple2D::findGameObject(Simple2D::Behavior *address) {
+    for(auto obj : *gameObjects){
+        if(obj->behavior == address){
+            return obj;
+        }
+    }
+
+    return nullptr;
 }

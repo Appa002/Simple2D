@@ -20,6 +20,7 @@
 
 namespace Simple2D{
     Simple2D::GameObject* findGameObject(std::string name);
+    Simple2D::GameObject* findGameObject(Behavior* address);
     GameObject * cloneGameObject(GameObject *toClone, std::string newName);
 }
 
