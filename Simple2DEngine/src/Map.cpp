@@ -89,8 +89,12 @@ void Simple2D::Map::updateAll() {
         try {
             try {
                 g->behavior->update();
+                if(g->isMarkedForDeletion()){
+                    delete g->behavior;
+                    delete g;
+                }
             } catch (std::exception& e){
-                printf("[ERROR] GameObject \"%s\" threw error while executing \"update()()\", error: \n%s \n", name.c_str(), e.what());
+                printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\", error: \n%s \n", name.c_str(), e.what());
             }
         } catch (...){
             printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
@@ -109,6 +113,10 @@ void Simple2D::Map::setupAll() {
         try {
             try {
                 g->behavior->setup();
+                if(g->isMarkedForDeletion()){
+                    delete g->behavior;
+                    delete g;
+                }
             } catch (std::exception& e){
                 printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\", error: \n%s \n", name.c_str(), e.what());
             }
@@ -125,6 +133,10 @@ void Simple2D::Map::eventHandelAll(SDL_Event e) {
         try {
             try {
                 g->behavior->onEvent(e);
+                if(g->isMarkedForDeletion()){
+                    delete g->behavior;
+                    delete g;
+                }
             } catch (std::exception& e){
                 printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent(SDL_Event& e)\", error: \n%s \n", name.c_str(), e.what());
             }
