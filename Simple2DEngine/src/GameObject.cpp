@@ -201,7 +201,6 @@ void Simple2D::GameObject::loadNewSprite(std::string path) {
     imageData = stbi_load(path.c_str(), spriteWidth, spriteHeight, &n, 4);
 
     if(!imageData){
-        printf("[WARNING] GameObject \"%s\" does not contain sprite.png at %s \n", name.c_str(), path.c_str());
         return;
     }
 
