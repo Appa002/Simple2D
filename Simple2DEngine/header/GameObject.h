@@ -23,6 +23,8 @@ namespace Simple2D{
         int* spriteHeight;
         unsigned char* imageData;
         GLuint* vao;
+        bool markedForDeletion = false;
+
     public:
         GameObject();
         ~GameObject();
@@ -31,6 +33,7 @@ namespace Simple2D{
         std::string name;
         std::string path;
 
+        bool isMarkedForDeletion();
         void render(GLuint shaderProgramme);
         void preSetup();
         void loadNewSprite(std::string path);
