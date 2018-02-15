@@ -20,6 +20,7 @@ Simple2D::GameObject* Simple2D::findGameObject(std::string name){
 
 Simple2D::GameObject * Simple2D::cloneGameObject(GameObject *toClone, std::string newName) {
     GameObject* gameObject = new GameObject;
+    gameObjects->push_back(gameObject);
     gameObject->name = newName;
     gameObject->path = toClone->path;
 
@@ -29,10 +30,9 @@ Simple2D::GameObject * Simple2D::cloneGameObject(GameObject *toClone, std::strin
 
     gameObject->behavior->init();
     gameObject->preSetup();
+    gameObject->behavior->setup();
 
-    gameObjects->push_back(gameObject);
 
-    std::cout << "Created new object" << std::endl;
     return gameObject;
 }
 
