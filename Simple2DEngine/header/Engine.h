@@ -142,7 +142,7 @@ namespace Simple2D{
 
             while (SDL_PollEvent(&event) != 0) {
                 if (event.type == SDL_QUIT) {
-                    Simple2D::MapManager::get()->getCurrentMap()->remove();
+                    Simple2D::MapManager::get()->unloadMap();
                     bQuit = true;
                 }
                 if(!bQuit)
