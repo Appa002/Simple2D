@@ -11,6 +11,9 @@ Simple2D::GameObject::GameObject() {
 }
 
 Simple2D::GameObject::~GameObject() {
+    if(behavior->amountOfAttributes() > 0){
+        printf("[WARNING] Not all attributes of GameObject \"%s\"'s behavior have been removed. This causes a memory leak.\n", this->name.c_str());
+    }
 
     delete spriteHeight;
     delete spriteWidth;
@@ -233,6 +236,7 @@ void Simple2D::GameObject::remove() {
     unsigned int i = 0;
     for(auto objAddress : *vec){
         if(objAddress == this){
+            this->behavior->onRemoval();
             vec->erase(vec->begin() + i);
             this->markedForDeletion = true;
             return;
