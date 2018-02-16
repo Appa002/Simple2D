@@ -78,20 +78,19 @@ int Simple2D::Map::loadGameObject(std::string path) {
 
 void Simple2D::Map::remove() {
     for(auto* g : *gameObjects){
-        g->remove();
+        g->behavior->onRemoval();
     }
+    this->gameObjects->clear();
     delete gameObjects;
     gameObjects = nullptr;
 }
 
 void Simple2D::Map::updateAll() {
-    for(auto g : *this->gameObjects){
+    size_t length = this->gameObjects->size();
+    for(size_t i = 0; i < length; i++){
         try {
             try {
-                g->behavior->update();
-                if(g->isMarkedForDeletion()){
-                    delete g;
-                }
+                this->gameObjects->at(i)->behavior->update();
             } catch (std::exception& e){
                 printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\", error: \n%s \n", name.c_str(), e.what());
             }
@@ -99,6 +98,15 @@ void Simple2D::Map::updateAll() {
             printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
         }
     }
+
+    for(size_t idx = 0; idx < this->gameObjects->size(); idx++){
+        auto g = this->gameObjects->at(idx);
+        if(g->isMarkedForDeletion()){
+            this->gameObjects->erase(this->gameObjects->begin() + idx);
+            delete g;
+        }
+    }
+
 }
 
 void Simple2D::Map::renderAll(GLuint shaderProgramme) {
@@ -108,40 +116,48 @@ void Simple2D::Map::renderAll(GLuint shaderProgramme) {
 }
 
 void Simple2D::Map::setupAll() {
-    for(auto g : *this->gameObjects){
+    size_t length = this->gameObjects->size();
+    for(size_t i = 0; i < length; i++){
         try {
             try {
-                g->behavior->setup();
-                if(g->isMarkedForDeletion()){
-                    delete g;
-                }
+                this->gameObjects->at(i)->behavior->setup();
             } catch (std::exception& e){
                 printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\", error: \n%s \n", name.c_str(), e.what());
             }
         } catch (...){
             printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
         }
+    }
 
-
+    for(size_t idx = 0; idx < this->gameObjects->size(); idx++){
+        auto g = this->gameObjects->at(idx);
+        if(g->isMarkedForDeletion()){
+            this->gameObjects->erase(this->gameObjects->begin() + idx);
+            delete g;
+        }
     }
 }
 
 void Simple2D::Map::eventHandelAll(SDL_Event e) {
-    for(auto g : *this->gameObjects){
+    size_t length = this->gameObjects->size();
+    for(size_t i = 0; i < length; i++){
         try {
             try {
-                g->behavior->onEvent(e);
-                if(g->isMarkedForDeletion()){
-                    delete g;
-                }
+                this->gameObjects->at(i)->behavior->onEvent(e);
             } catch (std::exception& e){
-                printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent(SDL_Event& e)\", error: \n%s \n", name.c_str(), e.what());
+                printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent()\", error: \n%s \n", name.c_str(), e.what());
             }
         } catch (...){
-            printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent(SDL_Event& e)\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
         }
+    }
 
-
+    for(size_t idx = 0; idx < this->gameObjects->size(); idx++){
+        auto g = this->gameObjects->at(idx);
+        if(g->isMarkedForDeletion()){
+            this->gameObjects->erase(this->gameObjects->begin() + idx);
+            delete g;
+        }
     }
 }
 
