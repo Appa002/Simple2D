@@ -68,7 +68,12 @@ namespace Simple2D{
         int resY = (int)lua_tointeger(L, -1);
         lua_pop(L, 1);
 
-        SDL_Window* window = SDL_CreateWindow("Simple2D Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, resX, resY, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+        Utils::pushToTop("data.name", L);
+        std::string name = lua_tostring(L, -1);
+        lua_pop(L, 1);
+
+
+        SDL_Window* window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, resX, resY, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
         SDL_GLContext context = SDL_GL_CreateContext(window);
         SDL_SetWindowResizable(window, SDL_TRUE);
 
