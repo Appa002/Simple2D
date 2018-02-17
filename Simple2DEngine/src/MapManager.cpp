@@ -26,7 +26,3 @@ int Simple2D::MapManager::unloadMap() {
 
     return 0;
 }
-
-std::string Simple2D::MapManager::getName() {
-    return this->curMap->name;
-}
