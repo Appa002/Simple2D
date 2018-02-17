@@ -28,6 +28,15 @@ int Simple2D::Map::load(std::string path) {
         return -1;
     }
 
+    Utils::pushToTop("data.resolutionX", L);
+    this->windowSizeX = (int)lua_tointeger(L, -1);
+    lua_pop(L, 1);
+
+    Utils::pushToTop("data.resolutionY", L);
+    this->windowSizeY = (int)lua_tointeger(L, -1);
+    lua_pop(L, 1);
+
+
     Utils::pushToTop("data.name", L);
     this->name = lua_tostring(L, -1);
     lua_pop(L, 1);
@@ -159,5 +168,17 @@ void Simple2D::Map::eventHandelAll(SDL_Event e) {
             delete g;
         }
     }
+}
+
+int Simple2D::Map::getWindowSizeX() {
+    return this->windowSizeX;
+}
+
+int Simple2D::Map::getWindowSizeY() {
+    return this->windowSizeY;
+}
+
+std::string Simple2D::Map::getName() {
+    return this->name;
 }
 
