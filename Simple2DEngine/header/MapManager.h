@@ -16,7 +16,7 @@ namespace Simple2D{
 
     public:
         Map* getCurrentMap();
-        std::string getName();
+
         int loadMap(std::string path);
         int unloadMap();
     };
