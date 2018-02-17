@@ -18,18 +18,23 @@ namespace Simple2D{
     class Map {
     private:
         int loadGameObject(std::string path);
+        int windowSizeX;
+        int windowSizeY;
+        std::string name;
     public:
         Map(std::string& path);
         Map();
         ~Map();
 
-        std::string name;
         int load(std::string path);
         void remove();
         void updateAll();
         void setupAll();
         void eventHandelAll(SDL_Event e);
         void renderAll(GLuint shaderProgramme);
+        std::string getName();
+        int getWindowSizeX();
+        int getWindowSizeY();
 
         std::vector<GameObject*>* gameObjects;
     };
