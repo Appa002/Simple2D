@@ -13,14 +13,16 @@
 #include "ExternalCodeLoadingWrapper.h"
 #include "GameObject.h"
 #include "Utils.h"
-
+#include <chrono>
 namespace Simple2D{
     class Map {
     private:
         int loadGameObject(std::string path);
+        long getTimeInMs();
         int windowSizeX;
         int windowSizeY;
         std::string name;
+        long lastTimestamp;
     public:
         Map(std::string& path);
         Map();
@@ -30,6 +32,7 @@ namespace Simple2D{
         void remove();
         void updateAll();
         void setupAll();
+        void fixedUpdateAll();
         void eventHandelAll(SDL_Event e);
         void renderAll(GLuint shaderProgramme);
         std::string getName();
