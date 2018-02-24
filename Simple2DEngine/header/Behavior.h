@@ -134,6 +134,7 @@ namespace Simple2D {
         virtual void setup() = 0;
         virtual void onRemoval() {};
         virtual void onEvent(SDL_Event& e) {};
+        virtual void fixedUpdate(){};
     };
 }
 
