@@ -6,10 +6,12 @@
 
 Simple2D::Map::Map(){
     gameObjects = new std::vector<GameObject*>;
+    this->lastTimestamp = getTimeInMs();
 }
 
 Simple2D::Map::Map(std::string& path) {
     gameObjects = new std::vector<GameObject*>;
+    this->lastTimestamp = getTimeInMs();
     load(path);
 }
 
@@ -104,7 +106,7 @@ void Simple2D::Map::updateAll() {
                 printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\", error: \n%s \n", name.c_str(), e.what());
             }
         } catch (...){
-            printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"update()\",this error is not of type std::exception no further information can be provided  \n", name.c_str());
         }
     }
 
@@ -134,7 +136,7 @@ void Simple2D::Map::setupAll() {
                 printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\", error: \n%s \n", name.c_str(), e.what());
             }
         } catch (...){
-            printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"setup()\",this error is not of type std::exception no further information can be provided  \n", name.c_str());
         }
     }
 
@@ -157,7 +159,7 @@ void Simple2D::Map::eventHandelAll(SDL_Event e) {
                 printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent()\", error: \n%s \n", name.c_str(), e.what());
             }
         } catch (...){
-            printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent()\",\nthis error is not of type std::exception\nno further information can be provided  \n", name.c_str());
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"onEvent()\",this error is not of type std::exception no further information can be provided  \n", name.c_str());
         }
     }
 
@@ -180,5 +182,44 @@ int Simple2D::Map::getWindowSizeY() {
 
 std::string Simple2D::Map::getName() {
     return this->name;
+}
+
+void Simple2D::Map::fixedUpdateAll() {
+    long curTime = getTimeInMs();
+    if(curTime - lastTimestamp < 80)
+        return;
+
+    if(curTime - lastTimestamp > 80 + 5)
+        std::cout << "[WARNING] fixedUpdate() called with " << getTimeInMs() - lastTimestamp << " milliseconds of delay, normally called with 80 milliseconds of delay." << std::endl;
+
+    lastTimestamp = getTimeInMs();
+
+    size_t length = this->gameObjects->size();
+    for(size_t i = 0; i < length; i++){
+        try {
+            try {
+                this->gameObjects->at(i)->behavior->fixedUpdate();
+            } catch (std::exception& e){
+                printf("[ERROR] GameObject \"%s\" threw error while executing \"fixedUpdate()\", error: \n%s \n", name.c_str(), e.what());
+            }
+        } catch (...){
+            printf("[ERROR] GameObject \"%s\" threw error while executing \"fixedUpdate()\", this error is not of type std::exception no further information can be provided.s\n", name.c_str());
+        }
+    }
+
+    for(size_t idx = 0; idx < this->gameObjects->size(); idx++){
+        auto g = this->gameObjects->at(idx);
+        if(g->isMarkedForDeletion()){
+            this->gameObjects->erase(this->gameObjects->begin() + idx);
+            delete g;
+        }
+    }
+
+}
+
+long Simple2D::Map::getTimeInMs() {
+    return std::chrono::duration_cast< std::chrono::milliseconds >(
+            std::chrono::system_clock::now().time_since_epoch()
+    ).count();
 }
 
