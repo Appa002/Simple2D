@@ -160,6 +160,7 @@ namespace Simple2D{
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 glUseProgram(shader_programme);
 
+                Simple2D::MapManager::get()->getCurrentMap()->fixedUpdateAll();
                 Simple2D::MapManager::get()->getCurrentMap()->updateAll();
                 Simple2D::MapManager::get()->getCurrentMap()->renderAll(shader_programme);
 
