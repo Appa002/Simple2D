@@ -2,8 +2,10 @@
 
 A simple engine I'm making for learning porpuses.
 
-Everything in the subfolder "Simple2DEngine" contains the actual engine 
-while "Simple2DgLibs" contains libraries for creating game objects.
+Everything in the subfolder "Simple2DEngine" contains the actual engine.
+The Engine Executable is the same for every game. For more information
+see this simple example.
+https://github.com/batburger/Moorhun
 
 ## Dependencies
 SDL2 GLEW GLU OpenGL lua stbi 
